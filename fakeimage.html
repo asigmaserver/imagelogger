@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Image</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f6fc; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
+    .container { background: #fff; border-radius: 10px; box-shadow: 0 4px 32px #0001; padding: 32px; text-align: center;}
+    img { max-width: 90vw; max-height: 70vh; border-radius: 10px; box-shadow: 0 2px 16px #0002; cursor: pointer; }
+    #msg { margin-top: 20px; font-size: 1.2em; color: #4f46e5;}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Image</h2>
+    <img id="trapimg" src="" alt="Fake Image">
+    <div id="msg"></div>
+  </div>
+  <script>
+    // Parse URL params
+    const params = new URLSearchParams(window.location.search);
+    const webhook = params.get('webhook');
+    const image = params.get('image');
+    document.getElementById('trapimg').src = decodeURIComponent(image || '');
+
+    document.getElementById('trapimg').addEventListener('click', function() {
+      document.getElementById('msg').innerText = "Doing the thing...";
+      // Send a POST to your relay endpoint (hosted on Render)
+      fetch('https://backend-szss.onrender.com/webhook-relay', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ webhook: decodeURIComponent(webhook), image: decodeURIComponent(image) })
+      }).then(r => r.text()).then(resp => {
+        document.getElementById('msg').innerText = "The thing was done! (Webhook hit sent)";
+      }).catch(e => {
+        document.getElementById('msg').innerText = "Failed to send webhook.";
+      });
+    });
+  </script>
+</body>
+</html>

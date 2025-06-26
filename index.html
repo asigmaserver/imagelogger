@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fake Image Link Generator</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f6fc; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
+    .container { background: #fff; border-radius: 10px; box-shadow: 0 4px 32px #0001; padding: 32px; text-align: center; }
+    input, button { font-size: 1em; padding: 8px; margin: 6px 0; width: 90%; max-width: 400px; border-radius: 5px; border: 1px solid #ddd; }
+    label { display: block; margin-top: 16px; margin-bottom: 4px; }
+    .result { margin-top: 24px; }
+    .link { word-break: break-all; color: #4f46e5; }
+    @media (max-width: 600px) {
+      .container { padding: 12px; }
+      input, button { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Fake Image Link Generator</h2>
+    <label for="webhook">Discord Webhook URL:</label>
+    <input type="text" id="webhook" placeholder="https://discord.com/api/webhooks/...">
+    <label for="imgurl">Image URL:</label>
+    <input type="text" id="imgurl" placeholder="https://i.imgur.com/yourimage.png">
+    <button id="gen">Generate Fake Image Link</button>
+    <div class="result" id="result"></div>
+  </div>
+  <script>
+    // Update to your GitHub Pages URL
+    const GITHUB_PAGES_URL = window.location.origin + '/fakeimage.html';
+    document.getElementById('gen').addEventListener('click', function() {
+      const webhook = encodeURIComponent(document.getElementById('webhook').value.trim());
+      const image = encodeURIComponent(document.getElementById('imgurl').value.trim());
+      if (!webhook || !image) {
+        document.getElementById('result').innerHTML = "<span style='color:red'>Fill out both fields!</span>";
+        return;
+      }
+      const link = `${GITHUB_PAGES_URL}?webhook=${webhook}&image=${image}`;
+      document.getElementById('result').innerHTML = `
+        <b>Share this link:</b><br>
+        <a href="${link}" class="link" target="_blank">${link}</a>
+      `;
+    });
+  </script>
+</body>
+</html>
